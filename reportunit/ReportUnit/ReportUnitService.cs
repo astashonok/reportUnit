@@ -23,7 +23,7 @@ namespace ReportUnit
 
         public ReportUnitService() { }
 
-        public void CreateReport(string input, string outputDirectory)
+        public void CreateReport(string input, string outputDirectory, string env)
         {
             var attributes = File.GetAttributes(input);
             IEnumerable<FileInfo> filePathList;
@@ -49,7 +49,7 @@ namespace ReportUnit
                 if (!(testRunner.Equals(TestRunner.Unknown)))
                 {
                     IParser parser = (IParser)Assembly.GetExecutingAssembly().CreateInstance(_ns + "." + Enum.GetName(typeof(TestRunner), testRunner));
-                    var report = parser.Parse(filePath.FullName);
+                    var report = parser.Parse(filePath.FullName, env);
 
                     compositeTemplate.AddReport(report);
                 }

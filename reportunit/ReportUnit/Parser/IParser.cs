@@ -4,6 +4,6 @@ namespace ReportUnit.Parser
 {
     public interface IParser
     {
-        Report Parse(string filePath);
+        Report Parse(string filePath, string env);
     }
 }

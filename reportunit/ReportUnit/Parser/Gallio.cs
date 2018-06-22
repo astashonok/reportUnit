@@ -23,7 +23,7 @@ namespace ReportUnit.Parser
         private XNamespace xns = "http://www.gallio.org/";
         private Logger logger = Logger.GetLogger();
 
-        public Report Parse(string resultsFile)
+        public Report Parse(string resultsFile, string env)
         {
             this.resultsFile = resultsFile;
 

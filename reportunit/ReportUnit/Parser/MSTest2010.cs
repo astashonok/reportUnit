@@ -23,7 +23,7 @@ namespace ReportUnit.Parser
         private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
         private Logger logger = Logger.GetLogger();
 
-        public Report Parse(string resultsFile)
+        public Report Parse(string resultsFile, string env)
         {
             XDocument doc = XDocument.Load(resultsFile);
 

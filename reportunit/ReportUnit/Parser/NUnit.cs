@@ -18,7 +18,7 @@ namespace ReportUnit.Parser
 
         private Logger logger = Logger.GetLogger();
 
-        public Report Parse(string resultsFile)
+        public Report Parse(string resultsFile, string env)
         {
             this.resultsFile = resultsFile;
 
@@ -29,6 +29,7 @@ namespace ReportUnit.Parser
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
             report.AssemblyName = doc.Root.Attribute( "name" ) != null ? doc.Root.Attribute("name").Value : null;
             report.TestRunner = TestRunner.NUnit;
+            report.RunEnvironment = env;
 
             // run-info & environment values -> RunInfo
             var runInfo = CreateRunInfo(doc, report);
@@ -240,10 +241,10 @@ namespace ReportUnit.Parser
                         test.ScreenShotAttachment += tc.Element("attachments").XPathSelectElement(".//attachment[description='Screenshot']/filePath") != null
                             ? "./Report/" + Path.GetFileName(tc.Element("attachments").XPathSelectElement(".//attachment[description='Screenshot']/filePath").Value.Trim())
                             : "";
-                        test.DebugAttachment += tc.Element("attachments").XPathSelectElement("//attachment[description='Debug']/filePath") != null
+                        test.DebugAttachment += tc.Element("attachments").XPathSelectElement(".//attachment[description='Debug']/filePath") != null
                             ? "./Report/" + Path.GetFileName(tc.Element("attachments").XPathSelectElement(".//attachment[description='Debug']/filePath").Value.Trim())
                             : "";
-                        test.InfoAttachment += tc.Element("attachments").XPathSelectElement("//attachment[description='Info']/filePath") != null
+                        test.InfoAttachment += tc.Element("attachments").XPathSelectElement(".//attachment[description='Info']/filePath") != null
                             ? "./Report/" + Path.GetFileName(tc.Element("attachments").XPathSelectElement(".//attachment[description='Info']/filePath").Value.Trim())
                             : "";
                     }
@@ -307,6 +308,7 @@ namespace ReportUnit.Parser
                 runInfo.Info.Add("NUnit Version", env.Attribute("nunit-version").Value);
             }
 
+            runInfo.Info.Add("Environment Name", "<a href ='https://kb.epam.com/display/SKSODC/Hosts+for+QAs' target='_blank'>" + report.RunEnvironment+"</a>");
             runInfo.Info.Add("Assembly Name", report.AssemblyName);
             runInfo.Info.Add("OS Version", env.Attribute("os-version").Value);
             runInfo.Info.Add("Platform", env.Attribute("platform").Value);

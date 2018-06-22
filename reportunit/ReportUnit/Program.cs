@@ -44,7 +44,7 @@ namespace ReportUnit
         static void Main(string[] args)
         {
             CopyrightMessage();
-
+            var env = "";
             if (args.Length == 0 || args.Length > 2)
             {
                 _logger.Error("Invalid number of arguments specified.\n" + USAGE);
@@ -63,16 +63,20 @@ namespace ReportUnit
             for (int ix = 0; ix < args.Length; ix++)
             {
                 args[ix] = args[ix].Replace('"', '\\');
+                if (args[ix].Contains("-Env="))
+                {
+                    env = args[ix].Split('=')[1];
+                }
             }
 
-            if (args.Length == 2)
+            if ((args.Length == 3 && !String.IsNullOrEmpty(env)) || (args.Length == 2 && String.IsNullOrEmpty(env)))
             {
                 if ((Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")) && (Path.GetExtension(args[1]).ToLower().Contains("htm")))
                 {
                     if (!Directory.GetParent(args[1]).Exists)
                         Directory.CreateDirectory(Directory.GetParent(args[1]).FullName);
 
-                    new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[1]).FullName);
+                    new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[1]).FullName, env);
                     return;
                 }
 
@@ -87,7 +91,7 @@ namespace ReportUnit
 
                 if (Directory.Exists(args[0]) && Directory.Exists(args[1]))
                 {
-                    new ReportUnitService().CreateReport(args[0], args[1]);
+                    new ReportUnitService().CreateReport(args[0], args[1], env);
                 }
                 else
                 {
@@ -99,7 +103,7 @@ namespace ReportUnit
 
             if (File.Exists(args[0]) && (Path.GetExtension(args[0]).ToLower().Contains("xml") || Path.GetExtension(args[0]).ToLower().Contains("trx")))
             {
-                new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName);
+                new ReportUnitService().CreateReport(args[0], Directory.GetParent(args[0]).FullName, env);
                 return;
             }
 
@@ -109,7 +113,7 @@ namespace ReportUnit
                 return;
             }
 
-            new ReportUnitService().CreateReport(args[0], args[0]);
+            new ReportUnitService().CreateReport(args[0], args[0], env);
         }
 
         private static void CopyrightMessage()

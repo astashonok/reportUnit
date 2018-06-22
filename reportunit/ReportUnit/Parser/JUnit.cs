@@ -14,7 +14,7 @@
 
     internal class JUnit : IParser
     {
-        public Report Parse(string filePath)
+        public Report Parse(string filePath, string env)
         {
             if (!File.Exists(filePath))
             {

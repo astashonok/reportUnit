@@ -69,6 +69,7 @@ namespace ReportUnit.Model
         public double Errors { get; set; }
 
         public string SideNavLinks { get; set; }
+        public string RunEnvironment { get; set; }
 
         public Report()
         {

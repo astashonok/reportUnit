@@ -1,4 +1,4 @@
-@using System
+﻿@using System
 @using System.Linq
 @using ReportUnit.Model
 @inherits RazorEngine.Templating.TemplateBase<Report>
@@ -16,13 +16,13 @@
                     
     </head>
     <body>
-        <div class='header'>
+        <div class='header @Model.RunEnvironment.ToLower()'>
             <nav>
                 <ul id='slide-out' class='side-nav fixed'>
                     @Model.SideNavLinks
                 </ul>
 
-                <span class='file-name'>@Model.FileName</span>
+                <span class='file-name'>@Model.FileName - @Model.RunEnvironment</span>
                             
                
                 <ul class='right nav-right'>
