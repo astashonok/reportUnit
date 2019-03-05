@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net;
 using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
 using ReportUnit.Model;
 
@@ -21,11 +21,30 @@ namespace ReportUnit.Utils
         // fixture level status codes
         public static Status GetFixtureStatus(List<Status> statuses)
         {
-            if (statuses.Any(x => x == Status.Failed)) return Status.Failed;
-            if (statuses.Any(x => x == Status.Error)) return Status.Error;
-            if (statuses.Any(x => x == Status.Inconclusive)) return Status.Inconclusive;
-            if (statuses.Any(x => x == Status.Passed)) return Status.Passed;
-            if (statuses.Any(x => x == Status.Skipped)) return Status.Skipped;
+            if (statuses.Any(x => x == Status.Failed))
+            {
+                return Status.Failed;
+            }
+
+            if (statuses.Any(x => x == Status.Error))
+            {
+                return Status.Error;
+            }
+
+            if (statuses.Any(x => x == Status.Inconclusive))
+            {
+                return Status.Inconclusive;
+            }
+
+            if (statuses.Any(x => x == Status.Passed))
+            {
+                return Status.Passed;
+            }
+
+            if (statuses.Any(x => x == Status.Skipped))
+            {
+                return Status.Skipped;
+            }
 
             return Status.Skipped;
             //return Status.Unknown;
@@ -36,9 +55,9 @@ namespace ReportUnit.Utils
             var status = "";
             var client = new HttpClient();
 
-            var request = (HttpWebRequest)WebRequest.Create($"https://jira.sks365.com/rest/api/2/issue/{bugId}?fields=status");
+            var request = (HttpWebRequest) WebRequest.Create($"https://jira.sks365.com/rest/api/2/issue/{bugId}?fields=status");
 
-            var encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes("g.astashonok-gs" + ":" + "zL7Bem!cfN#"));
+            var encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes("g.astashonok-gs" + ":" + "zL7Bem!cfN#"));
             request.Headers.Add("Authorization", "Basic " + encoded);
             try
             {

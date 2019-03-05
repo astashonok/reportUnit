@@ -18,11 +18,6 @@ namespace ReportUnit.Parser
 
         public Report Parse(string resultsFile, string env)
         {
-
-
-       
-
-
             this.resultsFile = resultsFile;
 
             var doc = XDocument.Load(resultsFile);
@@ -252,7 +247,7 @@ namespace ReportUnit.Parser
                         : "";
 
                     /******GetKnownIssues**********/
-                    string search = "\\[Known issue\\](.*)###";
+                    var search = "\\[Known issue\\](.*)###";
                     var matches = Regex.Matches(test.Output, search);
                     foreach (var match in matches)
                     {

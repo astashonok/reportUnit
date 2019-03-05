@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ReportUnit.Model
+﻿namespace ReportUnit.Model
 {
     public enum Status
     {
@@ -9,26 +7,25 @@ namespace ReportUnit.Model
         Passed, // passed, success, pass
         Inconclusive, // warning, bad, inconclusive, 
         Error, // error,
-        Failed, // failed, failure, fail, invalid
+        Failed // failed, failure, fail, invalid
     }
 
     internal static class StatusExtensions
     {
         /// <summary>
-        /// Convert a string into enum Status
+        ///     Convert a string into enum Status
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         internal static Status ToStatus(this string str)
         {
-
             if (string.IsNullOrWhiteSpace(str))
             {
                 return Status.Unknown;
             }
 
             str = str.Trim().ToLower();
-            
+
             switch (str)
             {
                 case "skipped":
@@ -70,7 +67,7 @@ namespace ReportUnit.Model
         }
 
         /// <summary>
-        /// Convert a Status into a string
+        ///     Convert a Status into a string
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>

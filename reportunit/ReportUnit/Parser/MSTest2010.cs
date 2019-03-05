@@ -1,33 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-
-using RazorEngine;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
-using RazorEngine.Text;
-
+using ReportUnit.Logging;
 using ReportUnit.Model;
 using ReportUnit.Utils;
-using ReportUnit.Logging;
 
 namespace ReportUnit.Parser
 {
     internal class MSTest2010 : IParser
     {
-        //private string resultsFile;
-        private XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
         private Logger logger = Logger.GetLogger();
+
+        //private string resultsFile;
+        private readonly XNamespace xns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
 
         public Report Parse(string resultsFile, string env)
         {
-            XDocument doc = XDocument.Load(resultsFile);
+            var doc = XDocument.Load(resultsFile);
 
-            Report report = new Report();
+            var report = new Report();
 
             report.FileName = Path.GetFileNameWithoutExtension(resultsFile);
             report.TestRunner = TestRunner.MSTest2010;
@@ -59,17 +51,17 @@ namespace ReportUnit.Parser
                 .Count();
 
             // report duration
-            XElement times = doc.Descendants(xns + "Times").First();
+            var times = doc.Descendants(xns + "Times").First();
             report.StartTime = times.Attribute("start").Value;
             report.EndTime = times.Attribute("finish").Value;
 
             // ToDo: add fixtures + tests
             doc.Descendants(xns + "UnitTestResult").AsParallel().ToList().ForEach(tc =>
             {
-                var test = new Model.Test();
+                var test = new Test();
 
                 test.Name = tc.Attribute("testName").Value;
-                test.Status = StatusExtensions.ToStatus(tc.Attribute("outcome").Value);
+                test.Status = tc.Attribute("outcome").Value.ToStatus();
 
                 // main a master list of all status
                 // used to build the status filter in the view
@@ -95,19 +87,18 @@ namespace ReportUnit.Parser
 
                 if (unitTestElement != null)
                 {
-                    
                     var descriptionElement = unitTestElement.Element(xns + "Description");
                     if (descriptionElement != null)
                     {
                         test.Description = descriptionElement.Value;
                     }
 
-                    var categories = (from testCategory in unitTestElement.Descendants(xns + "TestCategoryItem")
-                                          select testCategory.Attributes("TestCategory").Select(x => x.Value).FirstOrDefault()).ToList();
-                    
+                    var categories = (
+                        from testCategory in unitTestElement.Descendants(xns + "TestCategoryItem")
+                        select testCategory.Attributes("TestCategory").Select(x => x.Value).FirstOrDefault()).ToList();
+
                     test.CategoryList = categories;
-                    
-                    
+
                     if (categories.Any())
                     {
                         foreach (var suiteName in categories)
@@ -134,7 +125,7 @@ namespace ReportUnit.Parser
 
             if (testSuite == null)
             {
-                testSuite = new TestSuite { Name = suiteName };
+                testSuite = new TestSuite {Name = suiteName};
                 report.TestSuiteList.Add(testSuite);
             }
 
@@ -146,7 +137,7 @@ namespace ReportUnit.Parser
         private RunInfo CreateRunInfo(XDocument doc, Report report)
         {
             // run-info & environment values -> RunInfo
-            RunInfo runInfo = new RunInfo();
+            var runInfo = new RunInfo();
 
             runInfo.TestRunner = report.TestRunner;
             runInfo.Info.Add("TestRunner Version", "");

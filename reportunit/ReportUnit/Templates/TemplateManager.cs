@@ -9,13 +9,14 @@ namespace ReportUnit.Templates
     {
         public static string GetSummaryTemplate()
         {
-            return GetEncodedResource(new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).Directory.FullName + "/Summary.cshtml");
+            return GetEncodedResource(new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).Directory.FullName +
+                                      "/Summary.cshtml");
         }
 
         public static string GetFileTemplate()
         {
-            
-            return GetEncodedResource(new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).Directory.FullName + "/File.cshtml");
+            return GetEncodedResource(
+                new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).Directory.FullName + "/File.cshtml");
         }
 
         private static string GetEncodedResource(string path)
