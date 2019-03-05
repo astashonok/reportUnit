@@ -9,7 +9,7 @@ namespace ReportUnit.Templates
     {
         public static string GetSummaryTemplate()
         {
-            return GetEncodedResource(@"..\Templates\Summary.cshtml");
+            return GetEncodedResource(new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).Directory.FullName + "/Summary.cshtml");
         }
 
         public static string GetFileTemplate()

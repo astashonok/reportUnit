@@ -1,17 +1,10 @@
-﻿@using ReportUnit.Model
+﻿@using System
+@using System.Linq
+@using ReportUnit.Model
 @inherits RazorEngine.Templating.TemplateBase<CompositeTemplate>
 <!DOCTYPE html>
 <html lang='en'>
-<!--
-	ReportUnit 1.5 | http://reportunit.relevantcodes.com/
-	Created by Anshoo Arora (Relevant Codes) | Released under the MIT license
 
-	Template from:
-
-		ExtentReports Library | http://relevantcodes.com/extentreports-for-selenium/ | https://github.com/anshooarora/
-		Copyright (c) 2015, Anshoo Arora (Relevant Codes) | Copyrights licensed under the New BSD License | http://opensource.org/licenses/BSD-3-Clause
-		Documentation: http://extentreports.relevantcodes.com 
--->
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -21,33 +14,30 @@
 	<title>ReportUnit TestRunner Report</title>
 	<link href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
-	<link href='https://cdn.rawgit.com/reportunit/reportunit/005dcf934c5a53e60b9ec88a2a118930b433c453/cdn/reportunit.css' type='text/css' rel='stylesheet' />
+	<link href='http://ecsd0030031e.epam.com\reports\reportunit0.1.css' type='text/css' rel='stylesheet' />
                     
 </head>
 <body class='summary'>    
 	<div class='header'>
-		<nav>
-			<ul id='slide-out' class='side-nav fixed'>
+		<nav >
+			<ul id='slide-out' class='side-nav fixed' style="display: none">
 				@Model.SideNavLinks
 			</ul>
 
-			<span class='file-name'>Executive Summary</span>
-
-            <ul class='left'>
-                <li class='logo'>
-                    <a href='http://reportunit.relevantcodes.com/'><span>ReportUnit</span></a>
-                </li>
-            </ul>
-
-			<div class='right hide-on-med-and-down nav-right'>
-				<!-- <div class='nav-item'>
-					<a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='bottom' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-assignment'></i></a>
-				</div> -->
-				<div class='nav-item'>
-					v1.50.0
-				</div>
-			</div>
-		</nav>
+			
+            <span class='file-name' style ="display: none">
+                <a href='http://reportunit.relevantcodes.com/'><i class="mdi-action-view-headline"></i></a>
+            </span>
+                <span class='file-name'>Summary. Environment: <a href="https://wiki.sks365.com/pages/viewpage.action?spaceKey=DT&title=Hosts+for+QAs">@Model.ReportList[0].RunEnvironment </a></span>
+                <div class='right hide-on-med-and-down nav-right'>
+                    <!-- <div class='nav-item'>
+            <a class='modal-trigger waves-effect waves-light console-logs-icon tooltipped' data-position='bottom' data-tooltip='Console Logs' href='#modal2'><i class='mdi-action-assignment'></i></a>
+        </div> -->
+                    <div class='nav-item' style="display:  none">
+                        v1.50.0
+                    </div>
+                </div>
+</nav>
 	</div>
 	<div class='main'>
 		<div class='main-wrap'>
@@ -92,17 +82,16 @@
 			</div>-->
 			<div class='row'>
                 <div class='col s12'>
-                    <div class='card-panel report-list no-margin-v'>
+                    <div class='card-panel report-list no-margin-v' style="position: initial !important;">
                         <table class='table bordered'>
                             <thead>
                                 <tr>
-                                    <th>File</th>
-                                    <th>TestRunner</th>
-                                    <th>Total Tests</th>
-                                    <th>Passed</th>
-                                    <th>Failed</th>
-                                    <th>Others</th>
-                                    <th>Quick Summary</th>
+                                    <th class="fileNameHeader">File</th>
+                                    <th class="headerNumbers">Total Tests</th>
+                                    <th class="headerNumbers">Passed</th>
+                                    <th class="headerNumbers">Failed</th>
+                                    <th class="headerNumbers">Others</th>
+                                    <th style="width: 45%;">Quick Summary</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,17 +104,15 @@
                                 {
                                     <tr>
                                         <td><a href='./@(Model.ReportList[ix].FileName).html'>@Model.ReportList[ix].FileName</a></td>
-                                        <td>@Model.ReportList[ix].TestRunner</td>
                                         <td>@Model.ReportList[ix].Total</td>
                                         <td>@Model.ReportList[ix].Passed</td>
                                         <td>@Model.ReportList[ix].Failed</td>
-                                        <td>@(Model.ReportList[ix].Inconclusive + Model.ReportList[ix].Skipped + Model.ReportList[ix].Errors)</td>
+                                        <td>@(Model.ReportList[ix].Total - (Model.ReportList[ix].Passed + Model.ReportList[ix].Failed))</td>
                                         <td>
                                             @{var total = Model.ReportList[ix].Total;
                                                 var passed = Model.ReportList[ix].Passed;
                                                 var failed = Model.ReportList[ix].Failed;
                                                 var others = Model.ReportList[ix].Total - (Model.ReportList[ix].Passed + Model.ReportList[ix].Failed);
-
                                                 totalPassed += passed;
                                                 totalFailed += failed;
                                                 totalOthers += others;
@@ -135,20 +122,23 @@
                                                 <div class='progress2'>
                                                     @if (passed != 0)
                                                     {
+                                                        var passedDouble = (passed / total).ToString("0.0%");
 	                                                    <div style='width: @((passed / total) * 100)%' class='progress-bar2 progress-bar-success progress-bar-striped'>
-		                                                    <span class='sr-only'>@passed</span>
+                                                            <span class='sr-only'>@passedDouble</span>
 	                                                    </div> 
                                                     }
                                                     @if  (others != 0)
                                                     {
+                                                        var otherDouble = (others / total).ToString("0.0%");
 	                                                    <div style='width: @((others / total) * 100)%' class='progress-bar2 progress-bar-warning progress-bar-striped'>
-		                                                    <span class='sr-only'>@others</span>
+                                                            <span class='sr-only'> @otherDouble</span>
 	                                                    </div>
                                                     }
                                                     @if  (failed != 0)
                                                     {
+                                                        var failedDouble = (failed / total).ToString("0.0%");
 	                                                    <div style='width: @((failed / total) * 100)%' class='progress-bar2 progress-bar-danger progress-bar-striped'>
-		                                                    <span class='sr-only'>@failed</span>
+                                                            <span class='sr-only'>@failedDouble</span>
 	                                                    </div>
                                                     }
                                                 </div>
@@ -164,15 +154,44 @@
                                         </td>
                                     </tr>
                                 }
-                                <tr>
-                                    <td><span class='weight-normal'>Totals</span></td>
-                                    <td>-</td>
-                                    <td id='total-tests'>@Model.ReportList.SelectMany(x => x.TestSuiteList).SelectMany(x => x.TestList).Count()</td>
-                                    <td id='total-passed'>@totalPassed</td>
-                                    <td id='total-failed'>@totalFailed</td>
-                                    <td id='total-others'>@totalOthers</td>
-                                    <td>-</td>
-                                </tr>
+                                    <tr>
+                                        @{
+                                            var totalTests = Model.ReportList.SelectMany(x => x.TestSuiteList).SelectMany(x => x.TestList).Count();
+                                        }
+                                        <td><span class='weight-normal'>Totals</span></td>
+                                        <td id='total-tests'>@totalTests</td>
+                                        <td id='total-passed'>@totalPassed</td>
+                                        <td id='total-failed'>@totalFailed</td>
+                                        <td id='total-others'>@totalOthers</td>
+                                        <td>
+                                            @if (totalTests != 0)
+                                            {
+                                                <div class='progress2'>
+                                                    @if (totalPassed != 0)
+                                                    {
+                                                        var passedDouble = (totalPassed / totalTests).ToString("0.0%");
+                                                        <div style='width: @((totalPassed / totalTests) * 100)%' class='progress-bar2 progress-bar-success progress-bar-striped'>
+                                                            <span class='sr-only'>@passedDouble</span>
+                                                        </div>
+                                                    }
+                                                    @if (totalOthers != 0)
+                                                    {
+                                                        var otherDouble = (totalOthers / totalTests).ToString("0.0%");
+                                                        <div style='width: @((totalOthers / totalTests) * 100)%' class='progress-bar2 progress-bar-warning progress-bar-striped'>
+                                                            <span class='sr-only'> @otherDouble</span>
+                                                        </div>
+                                                    }
+                                                    @if (totalFailed != 0)
+                                                    {
+                                                        var failedDouble = (totalFailed / totalTests).ToString("0.0%");
+                                                        <div style='width: @((totalFailed / totalTests) * 100)%' class='progress-bar2 progress-bar-danger progress-bar-striped'>
+                                                            <span class='sr-only'>@failedDouble</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
                             </tbody>
                         </table>
                     </div>

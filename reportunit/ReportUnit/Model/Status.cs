@@ -1,4 +1,6 @@
-﻿namespace ReportUnit.Model
+﻿using System;
+
+namespace ReportUnit.Model
 {
     public enum Status
     {
@@ -19,13 +21,14 @@
         /// <returns></returns>
         internal static Status ToStatus(this string str)
         {
+
             if (string.IsNullOrWhiteSpace(str))
             {
                 return Status.Unknown;
             }
 
             str = str.Trim().ToLower();
-
+            
             switch (str)
             {
                 case "skipped":

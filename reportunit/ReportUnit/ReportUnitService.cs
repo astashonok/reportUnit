@@ -59,7 +59,7 @@ namespace ReportUnit
                 Logger.GetLogger().Fatal("No reports added - invalid files?");
                 return;
             }
-            if (compositeTemplate.ReportList.Count > 1)
+            if (compositeTemplate.ReportList.Count > 0)
             {
                 compositeTemplate.SideNavLinks = compositeTemplate.SideNavLinks.Insert(0, Templates.SideNav.IndexLink);
 
@@ -70,7 +70,6 @@ namespace ReportUnit
             foreach (var report in compositeTemplate.ReportList)
             {
                 report.SideNavLinks = compositeTemplate.SideNavLinks;
-
                 var html = Engine.Razor.RunCompile(Templates.TemplateManager.GetFileTemplate(), "report", typeof(Model.Report), report, null);
                 File.WriteAllText(Path.Combine(outputDirectory, report.FileName + ".html"), html);
             }

@@ -39,6 +39,10 @@ namespace ReportUnit.Model
         public string DebugAttachment { get; set; }
 
         public string InfoAttachment { get; set; }
+        public string Output { get; set; }
+
+        public List<string> KnownIssues;
+        public List<string> PossibleIssues;
 
         /// <summary>
         /// Categories & features associated with the test
@@ -58,6 +62,8 @@ namespace ReportUnit.Model
         public Test()
         {
             CategoryList = new List<string>();
+            KnownIssues = new List<string>();
+            PossibleIssues = new List<string>();
             Status = Status.Unknown;
         }
     }
